@@ -3,7 +3,13 @@ import os
 import shutil
 import subprocess
 import re
+import stat
 from pathlib import Path
+
+def remove_readonly(func, path, _):
+    """Clear the readonly bit and reattempt the removal."""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 def main():
     if len(sys.argv) != 3:
@@ -51,7 +57,7 @@ def main():
             with open(root_cmake_path, 'w', encoding='utf-8') as f:
                 f.write(root_cmake_content)
 
-    skip_dirs = {'.git', 'libauxid'}
+    skip_dirs = {'libauxid'}
     script_path = Path(__file__).resolve()
 
     for filepath in root_dir.rglob('*'):
@@ -128,11 +134,22 @@ def main():
                     f"target_link_libraries({project_name} PUBLIC libauxid)\n"
                     f"target_link_libraries({project_name} PRIVATE auxid_platform)\n")
 
-    print("Initializing git submodules...")
+    print("Setting up fresh Git repository...")
     try:
-        subprocess.run(["git", "submodule", "update", "--init", "--recursive"], check=True)
+        git_dir = root_dir / ".git"
+        if git_dir.exists():
+            shutil.rmtree(git_dir, onerror=remove_readonly)
+            
+        subprocess.run(["git", "init"], check=True)
+        
+        submodule_url = "https://github.com/I-A-S/Auxid" 
+        print(f"Adding libauxid submodule from {submodule_url}...")
+        subprocess.run(["git", "submodule", "add", submodule_url, "libauxid"], check=True)
+        
     except subprocess.CalledProcessError as e:
-        print(f"Warning: Failed to update git submodules. Is git initialized? Error: {e}")
+        print(f"Warning: Git operations failed. Error: {e}")
+    except Exception as e:
+        print(f"Warning: Unexpected error during Git setup: {e}")
 
     try:
         os.remove(script_path)
