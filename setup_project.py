@@ -107,7 +107,7 @@ def main():
         
         hpp_file = inc_dir / f"{project_name}.hpp"
         with open(hpp_file, 'w', encoding='utf-8') as f:
-            f.write(f"#pragma once\n\nnamespace {project_name} {{\n    // TODO: Add library declarations\n}}\n")
+            f.write(f"#pragma once\n\n#include <auxid/auxid.hpp>\n\nnamespace {project_name} {{\n    // TODO: Add library declarations\n}}\n")
             
         os.remove(src_cpp_dir / ".gitkeep")
         os.remove(root_dir / "include" / ".gitkeep")
@@ -115,7 +115,7 @@ def main():
         cpp_file = src_cpp_dir / f"{project_name}.cpp"
         cpp_file.parent.mkdir(parents=True, exist_ok=True)
         with open(cpp_file, 'w', encoding='utf-8') as f:
-            f.write(f"#include \"{project_name}/{project_name}.hpp\"\n\nnamespace {project_name} {{\n    // TODO: Add library implementations\n}}\n")
+            f.write(f"#include <{project_name}/{project_name}.hpp>\n\nnamespace {project_name} {{\n    // TODO: Add library implementations\n}}\n")
 
         lib_type = "SHARED" if project_type == 'shared_lib' else "STATIC"
         with open(src_cmake_path, 'w', encoding='utf-8') as f:
@@ -123,8 +123,8 @@ def main():
                     f"target_include_directories({project_name} PUBLIC\n"
                     f"    $<BUILD_INTERFACE:${{{project_name}_ROOT}}/include>\n"
                     f"    $<INSTALL_INTERFACE:include>\n"
-                    f")\n\n"
-                    f"target_include_directories({project_name} PRIVATE hpp)\n"
+                    f")\n"
+                    f"target_include_directories({project_name} PRIVATE hpp)\n\n"
                     f"target_link_libraries({project_name} PUBLIC libauxid)\n"
                     f"target_link_libraries({project_name} PRIVATE auxid_platform)\n")
 
