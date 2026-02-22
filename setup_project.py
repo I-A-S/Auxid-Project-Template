@@ -72,6 +72,7 @@ def main():
 
     src_dir = root_dir / "src"
     src_cpp_dir = src_dir / "cpp"
+    src_hpp_dir = src_dir / "hpp"
     src_cmake_path = src_dir / "CMakeLists.txt"
     
     if project_type == 'executable':
@@ -83,11 +84,22 @@ def main():
         main_cpp = src_cpp_dir / "main.cpp"
         main_cpp.parent.mkdir(parents=True, exist_ok=True)
         with open(main_cpp, 'w', encoding='utf-8') as f:
-            f.write(f"#include <iostream>\n\nint main() {{\n    std::cout << \"Hello from {project_name}!\\n\";\n    return 0;\n}}\n")
+            f.write(f"#include <pch.hpp>\n\nint main(int argc, char* argv[]) {{\n    printf(\"Hello from {project_name}!\\n\");\n    return 0;\n}}\n")
+
+        pch_hpp = src_hpp_dir / "pch.hpp"
+        pch_hpp.parent.mkdir(parents=True, exist_ok=True)
+        with open(pch_hpp, 'w', encoding='utf-8') as f:
+            f.write(f"#pragma once\n\n#include <auxid/auxid.hpp>\n\n")
+
+        os.remove(src_cpp_dir / ".gitkeep")
+        os.remove(src_hpp_dir / ".gitkeep")
 
         with open(src_cmake_path, 'w', encoding='utf-8') as f:
             f.write(f"add_executable({project_name} cpp/main.cpp)\n\n"
-                    f"target_link_libraries({project_name} PRIVATE libauxid)\n")
+                    f"target_include_directories({project_name} PRIVATE hpp)\n"
+                    f"target_link_libraries({project_name} PRIVATE libauxid auxid_platform)\n\n"
+                    f"target_precompile_headers({project_name} PRIVATE hpp/pch.hpp)\n"
+                )
 
     else:
         inc_dir = root_dir / "include" / project_name
@@ -97,6 +109,9 @@ def main():
         with open(hpp_file, 'w', encoding='utf-8') as f:
             f.write(f"#pragma once\n\nnamespace {project_name} {{\n    // TODO: Add library declarations\n}}\n")
             
+        os.remove(inc_dir / ".gitkeep")
+        os.remove(src_cpp_dir / ".gitkeep")
+
         cpp_file = src_cpp_dir / f"{project_name}.cpp"
         cpp_file.parent.mkdir(parents=True, exist_ok=True)
         with open(cpp_file, 'w', encoding='utf-8') as f:
@@ -106,10 +121,12 @@ def main():
         with open(src_cmake_path, 'w', encoding='utf-8') as f:
             f.write(f"add_library({project_name} {lib_type} cpp/{project_name}.cpp)\n\n"
                     f"target_include_directories({project_name} PUBLIC\n"
-                    f"    $<BUILD_INTERFACE:${{CMAKE_CURRENT_SOURCE_DIR}}/../include>\n"
+                    f"    $<BUILD_INTERFACE:${{{project_name}_ROOT}}/include>\n"
                     f"    $<INSTALL_INTERFACE:include>\n"
                     f")\n\n"
-                    f"target_link_libraries({project_name} PRIVATE libauxid)\n")
+                    f"target_include_directories({project_name} PRIVATE hpp)\n"
+                    f"target_link_libraries({project_name} PUBLIC libauxid)\n"
+                    f"target_link_libraries({project_name} PRIVATE auxid_platform)\n")
 
     print("Initializing git submodules...")
     try:
