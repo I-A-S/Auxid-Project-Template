@@ -109,8 +109,8 @@ def main():
         with open(hpp_file, 'w', encoding='utf-8') as f:
             f.write(f"#pragma once\n\nnamespace {project_name} {{\n    // TODO: Add library declarations\n}}\n")
             
-        os.remove(inc_dir / ".gitkeep")
         os.remove(src_cpp_dir / ".gitkeep")
+        os.remove(root_dir / "include" / ".gitkeep")
 
         cpp_file = src_cpp_dir / f"{project_name}.cpp"
         cpp_file.parent.mkdir(parents=True, exist_ok=True)
