@@ -103,7 +103,7 @@ def main():
         with open(src_cmake_path, 'w', encoding='utf-8') as f:
             f.write(f"add_executable({project_name} cpp/main.cpp)\n\n"
                     f"target_include_directories({project_name} PRIVATE hpp)\n"
-                    f"target_link_libraries({project_name} PRIVATE libauxid auxid_platform)\n\n"
+                    f"target_link_libraries({project_name} PRIVATE libauxid auxid_platform_standard)\n\n"
                     f"target_precompile_headers({project_name} PRIVATE hpp/pch.hpp)\n"
                 )
 
@@ -132,7 +132,7 @@ def main():
                     f")\n"
                     f"target_include_directories({project_name} PRIVATE hpp)\n\n"
                     f"target_link_libraries({project_name} PUBLIC libauxid)\n"
-                    f"target_link_libraries({project_name} PRIVATE auxid_platform)\n")
+                    f"target_link_libraries({project_name} PRIVATE auxid_platform_standard)\n")
 
     print("Setting up fresh Git repository...")
     try:
