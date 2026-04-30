@@ -24,21 +24,66 @@
       }
     },
     {
-      "name": "${AUXID_PROJECT_NAME}-x64-windows",
-      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Clang)",
-      "inherits": "x64-windows",
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-msvc",
+      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Ninja MSVC)",
+      "inherits": "x64-windows-msvc",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/x64-windows-msvc.cmake"
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-clang",
+      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Ninja Clang)",
+      "inherits": "x64-windows-clang",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/x64-windows-clang.cmake"
       }
     },
     {
-      "name": "${AUXID_PROJECT_NAME}-arm64-windows",
-      "displayName": "${AUXID_PROJECT_NAME} Windows ARM64 (Clang Cross)",
-      "inherits": "arm64-windows",
+      "name": "${AUXID_PROJECT_NAME}-arm64-windows-clang",
+      "displayName": "${AUXID_PROJECT_NAME} Windows ARM64 (Ninja Clang Cross)",
+      "inherits": "arm64-windows-clang",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/arm64-windows-clang.cmake"
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-arm64-windows-msvc",
+      "displayName": "${AUXID_PROJECT_NAME} Windows ARM64 (Ninja MSVC)",
+      "inherits": "arm64-windows-msvc",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/arm64-windows-msvc.cmake"
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows",
+      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Visual Studio 2022)",
+      "inherits": "x64-windows",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/x64-windows-msvc.cmake"
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-arm64-windows",
+      "displayName": "${AUXID_PROJECT_NAME} Windows ARM64 (Visual Studio 2022)",
+      "inherits": "arm64-windows",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/arm64-windows-msvc.cmake"
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-wasm32-emscripten",
+      "displayName": "${AUXID_PROJECT_NAME} WebAssembly (Clang)",
+      "inherits": "wasm32-emscripten",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/wasm32-emscripten-clang.cmake"
       }
     },
     {
@@ -57,8 +102,40 @@
       "configurePreset": "${AUXID_PROJECT_NAME}-x64-linux"
     },
     {
+      "name": "${AUXID_PROJECT_NAME}-arm64-linux",
+      "configurePreset": "${AUXID_PROJECT_NAME}-arm64-linux"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-msvc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-msvc"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-clang",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-clang"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-arm64-windows-clang",
+      "configurePreset": "${AUXID_PROJECT_NAME}-arm64-windows-clang"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-arm64-windows-msvc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-arm64-windows-msvc"
+    },
+    {
       "name": "${AUXID_PROJECT_NAME}-x64-windows",
       "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-arm64-windows",
+      "configurePreset": "${AUXID_PROJECT_NAME}-arm64-windows"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-wasm32-emscripten",
+      "configurePreset": "${AUXID_PROJECT_NAME}-wasm32-emscripten"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-cross",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-cross"
     }
   ],
   "testPresets": [
@@ -73,6 +150,14 @@
     {
       "name": "${AUXID_PROJECT_NAME}-x64-windows",
       "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-clang",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-clang",
       "configuration": "Release",
       "output": {
         "outputOnFailure": true
