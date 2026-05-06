@@ -27,6 +27,8 @@ CheckOptions:
   # ----------------------------------------------------------------------------
   - key: readability-identifier-naming.FunctionCase
     value: lower_case
+  - key: readability-identifier-naming.FunctionIgnoredRegexp
+    value: ^__.*$
   - key: readability-identifier-naming.MethodCase
     value: lower_case
   - key: readability-identifier-naming.ParameterCase
