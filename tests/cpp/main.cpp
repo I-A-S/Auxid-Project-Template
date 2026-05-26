@@ -28,18 +28,7 @@ int main(int argc, char *argv[])
   AU_UNUSED(argc);
   AU_UNUSED(argv);
 
-  struct ThreadInitGuard
-  {
-    ThreadInitGuard()
-    {
-      auxid::initialize_main_thread();
-    }
-
-    ~ThreadInitGuard()
-    {
-      auxid::terminate_main_thread();
-    }
-  } _thread_init_guard;
+  auxid::MainThreadGuard _main_thread_guard;
 
   std::cout << console::GREEN << "\n================================\n";
   std::cout << "   ${AUXID_PROJECT_NAME} - Unit Test Suite\n";
