@@ -24,6 +24,33 @@
       }
     },
     {
+      "name": "${AUXID_PROJECT_NAME}-x64-linux-gcc",
+      "displayName": "${AUXID_PROJECT_NAME} Linux x64 (GCC 15.2)",
+      "inherits": "x64-linux-gcc",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/x64-linux-gcc.cmake"
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-arm64-linux-gcc",
+      "displayName": "${AUXID_PROJECT_NAME} Linux ARM64 (GCC 15.2 Cross)",
+      "inherits": "arm64-linux-gcc",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/arm64-linux-gcc.cmake"
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-mingw-gcc",
+      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (MinGW GCC 15.2)",
+      "inherits": "x64-windows-mingw-gcc",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/x64-windows-mingw-gcc.cmake"
+      }
+    },
+    {
       "name": "${AUXID_PROJECT_NAME}-x64-windows-msvc",
       "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Ninja MSVC)",
       "inherits": "x64-windows-msvc",
@@ -61,7 +88,7 @@
     },
     {
       "name": "${AUXID_PROJECT_NAME}-x64-windows",
-      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Visual Studio 2022)",
+      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Visual Studio 2026)",
       "inherits": "x64-windows",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
@@ -70,7 +97,7 @@
     },
     {
       "name": "${AUXID_PROJECT_NAME}-arm64-windows",
-      "displayName": "${AUXID_PROJECT_NAME} Windows ARM64 (Visual Studio 2022)",
+      "displayName": "${AUXID_PROJECT_NAME} Windows ARM64 (Visual Studio 2026)",
       "inherits": "arm64-windows",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
@@ -79,20 +106,11 @@
     },
     {
       "name": "${AUXID_PROJECT_NAME}-wasm32-emscripten",
-      "displayName": "${AUXID_PROJECT_NAME} WebAssembly (Clang)",
+      "displayName": "${AUXID_PROJECT_NAME} WebAssembly (Emscripten)",
       "inherits": "wasm32-emscripten",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/wasm32-emscripten-clang.cmake"
-      }
-    },
-    {
-      "name": "${AUXID_PROJECT_NAME}-x64-windows-cross",
-      "displayName": "${AUXID_PROJECT_NAME} Windows x64 (Clang Cross Linux Host)",
-      "inherits": "x64-windows-cross",
-      "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/libauxid/cmake/toolchains/x64-windows-cross-clang.cmake"
       }
     }
   ],
@@ -104,6 +122,18 @@
     {
       "name": "${AUXID_PROJECT_NAME}-arm64-linux",
       "configurePreset": "${AUXID_PROJECT_NAME}-arm64-linux"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-linux-gcc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-linux-gcc"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-arm64-linux-gcc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-arm64-linux-gcc"
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-mingw-gcc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-mingw-gcc"
     },
     {
       "name": "${AUXID_PROJECT_NAME}-x64-windows-msvc",
@@ -132,16 +162,28 @@
     {
       "name": "${AUXID_PROJECT_NAME}-wasm32-emscripten",
       "configurePreset": "${AUXID_PROJECT_NAME}-wasm32-emscripten"
-    },
-    {
-      "name": "${AUXID_PROJECT_NAME}-x64-windows-cross",
-      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-cross"
     }
   ],
   "testPresets": [
     {
       "name": "${AUXID_PROJECT_NAME}-x64-linux",
       "configurePreset": "${AUXID_PROJECT_NAME}-x64-linux",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-linux-gcc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-linux-gcc",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-mingw-gcc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-mingw-gcc",
       "configuration": "Release",
       "output": {
         "outputOnFailure": true
@@ -156,8 +198,24 @@
       }
     },
     {
+      "name": "${AUXID_PROJECT_NAME}-x64-windows-msvc",
+      "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-msvc",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
       "name": "${AUXID_PROJECT_NAME}-x64-windows-clang",
       "configurePreset": "${AUXID_PROJECT_NAME}-x64-windows-clang",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "${AUXID_PROJECT_NAME}-wasm32-emscripten",
+      "configurePreset": "${AUXID_PROJECT_NAME}-wasm32-emscripten",
       "configuration": "Release",
       "output": {
         "outputOnFailure": true

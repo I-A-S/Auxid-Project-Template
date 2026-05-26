@@ -90,22 +90,31 @@ def main():
         main_cpp = src_cpp_dir / "main.cpp"
         main_cpp.parent.mkdir(parents=True, exist_ok=True)
         with open(main_cpp, 'w', encoding='utf-8') as f:
-            f.write(f"#include <pch.hpp>\n\nint main(int argc, char* argv[]) {{\n    printf(\"Hello from {project_name}!\\n\");\n    return 0;\n}}\n")
+            f.write(
+                "#include <iostream>\n\n"
+                "import auxid;\n\n"
+                "using namespace au;\n\n"
+                f"auto main() -> int\n"
+                "{\n"
+                "    auxid::MainThreadGuard _main_thread_guard;\n"
+                f'    std::cout << "Hello from {project_name}!\\n";\n'
+                "    return 0;\n"
+                "}\n"
+            )
 
-        pch_hpp = src_hpp_dir / "pch.hpp"
-        pch_hpp.parent.mkdir(parents=True, exist_ok=True)
-        with open(pch_hpp, 'w', encoding='utf-8') as f:
-            f.write(f"#pragma once\n\n#include <auxid/auxid.hpp>\n\n")
+        if src_hpp_dir.exists():
+            shutil.rmtree(src_hpp_dir)
 
-        os.remove(src_cpp_dir / ".gitkeep")
-        os.remove(src_hpp_dir / ".gitkeep")
+        gitkeep_cpp = src_cpp_dir / ".gitkeep"
+        if gitkeep_cpp.exists():
+            os.remove(gitkeep_cpp)
 
         with open(src_cmake_path, 'w', encoding='utf-8') as f:
-            f.write(f"add_executable({project_name} cpp/main.cpp)\n\n"
-                    f"target_include_directories({project_name} PRIVATE hpp)\n"
-                    f"target_link_libraries({project_name} PRIVATE libauxid auxid_platform_standard)\n\n"
-                    f"target_precompile_headers({project_name} PRIVATE hpp/pch.hpp)\n"
-                )
+            f.write(
+                f"add_executable({project_name} cpp/main.cpp)\n\n"
+                f"target_link_libraries({project_name} PRIVATE libauxid)\n"
+                f"set_target_properties({project_name} PROPERTIES CXX_SCAN_FOR_MODULES ON)\n"
+            )
 
     else:
         inc_dir = root_dir / "include" / project_name
@@ -113,26 +122,42 @@ def main():
         
         hpp_file = inc_dir / f"{project_name}.hpp"
         with open(hpp_file, 'w', encoding='utf-8') as f:
-            f.write(f"#pragma once\n\n#include <auxid/auxid.hpp>\n\nnamespace {project_name} {{\n    // TODO: Add library declarations\n}}\n")
-            
-        os.remove(src_cpp_dir / ".gitkeep")
-        os.remove(root_dir / "include" / ".gitkeep")
+            f.write(
+                f"#pragma once\n\n"
+                f"namespace {project_name} {{\n"
+                "    // TODO: Add library declarations\n"
+                "}\n"
+            )
+
+        gitkeep_cpp = src_cpp_dir / ".gitkeep"
+        if gitkeep_cpp.exists():
+            os.remove(gitkeep_cpp)
+        gitkeep_inc = root_dir / "include" / ".gitkeep"
+        if gitkeep_inc.exists():
+            os.remove(gitkeep_inc)
 
         cpp_file = src_cpp_dir / f"{project_name}.cpp"
         cpp_file.parent.mkdir(parents=True, exist_ok=True)
         with open(cpp_file, 'w', encoding='utf-8') as f:
-            f.write(f"#include <{project_name}/{project_name}.hpp>\n\nnamespace {project_name} {{\n    // TODO: Add library implementations\n}}\n")
+            f.write(
+                f"#include <{project_name}/{project_name}.hpp>\n\n"
+                "import auxid;\n\n"
+                f"namespace {project_name} {{\n"
+                "    // TODO: Add library implementations\n"
+                "}\n"
+            )
 
         lib_type = "SHARED" if project_type == 'shared_lib' else "STATIC"
         with open(src_cmake_path, 'w', encoding='utf-8') as f:
-            f.write(f"add_library({project_name} {lib_type} cpp/{project_name}.cpp)\n\n"
-                    f"target_include_directories({project_name} PUBLIC\n"
-                    f"    $<BUILD_INTERFACE:${{{project_name}_ROOT}}/include>\n"
-                    f"    $<INSTALL_INTERFACE:include>\n"
-                    f")\n"
-                    f"target_include_directories({project_name} PRIVATE hpp)\n\n"
-                    f"target_link_libraries({project_name} PUBLIC libauxid)\n"
-                    f"target_link_libraries({project_name} PRIVATE auxid_platform_standard)\n")
+            f.write(
+                f"add_library({project_name} {lib_type} cpp/{project_name}.cpp)\n\n"
+                f"target_include_directories({project_name} PUBLIC\n"
+                f"    $<BUILD_INTERFACE:${{{project_name}_ROOT}}/include>\n"
+                f"    $<INSTALL_INTERFACE:include>\n"
+                f")\n\n"
+                f"target_link_libraries({project_name} PUBLIC libauxid)\n"
+                f"set_target_properties({project_name} PROPERTIES CXX_SCAN_FOR_MODULES ON)\n"
+            )
 
     print("Setting up fresh Git repository...")
     try:

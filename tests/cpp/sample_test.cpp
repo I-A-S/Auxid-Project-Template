@@ -1,28 +1,33 @@
-#include <auxid/utils/test.hpp>
+import auxid;
+import auxid.test;
 
 using namespace au;
 
-AUT_BEGIN_BLOCK(${AUXID_PROJECT_NAME}, sample)
-
-auto test_ok() -> bool
+namespace
 {
-  AUT_CHECK(true);
+  struct SampleBlock final : test::Block
+  {
+    [[nodiscard]] auto get_name() const -> const char * override
+    {
+      return "${AUXID_PROJECT_NAME}::sample";
+    }
 
-  return true;
-}
+    auto declare_tests() -> void override
+    {
+      add_test("ok", [this] { return test_ok(); });
+      add_test("fail", [this] { return test_fail(); });
+    }
 
-auto test_fail() -> bool
-{
-  AUT_CHECK_EQ(2, 10);
+    auto test_ok() -> bool
+    {
+      return check(true, "true");
+    }
 
-  return true;
-}
+    auto test_fail() -> bool
+    {
+      return check_eq(2, 10, "2 == 10");
+    }
+  };
 
-AUT_BEGIN_TEST_LIST()
-AUT_ADD_TEST(test_ok);
-AUT_ADD_TEST(test_fail);
-AUT_END_TEST_LIST()
-
-AUT_END_BLOCK()
-
-AUT_REGISTER_ENTRY(${AUXID_PROJECT_NAME}, sample);
+  const test::AutoRegister<SampleBlock> _registered;
+} // namespace
