@@ -14,9 +14,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <iostream>
-
 #include <auxid/macros.hpp>
+
+#include <print>
 
 import auxid;
 import auxid.test;
@@ -28,11 +28,22 @@ int main(int argc, char *argv[])
   AU_UNUSED(argc);
   AU_UNUSED(argv);
 
-  auxid::MainThreadGuard _main_thread_guard;
+  struct ThreadInitGuard
+  {
+    ThreadInitGuard()
+    {
+      auxid::initialize_main_thread();
+    }
 
-  std::cout << console::GREEN << "\n================================\n";
-  std::cout << "   ${AUXID_PROJECT_NAME} - Unit Test Suite\n";
-  std::cout << "================================\n" << console::RESET << "\n";
+    ~ThreadInitGuard()
+    {
+      auxid::terminate_main_thread();
+    }
+  } _thread_init_guard;
+
+  std::println("{}\n================================", console::GREEN);
+  std::println("   LibAuxid - Unit Test Suite");
+  std::println("================================{}\n", console::RESET);
 
   return test::TestRegistry::run_all();
 }
